@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Have I Been Pwned - Complete Checker</title>
+    <title>Password Checking</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
@@ -19,81 +19,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            justify-content: center;
+            padding: 20px;
         }
 
-        /* Nav Tabs */
-        .tabs {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 35px;
-            background: #161b22;
-            padding: 6px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: #8b949e;
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn.active {
-            background: #1f6feb;
-            color: #ffffff;
-        }
-
-        .tab-content {
-            display: none;
+        .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             text-align: center;
-        }
-
-        .tab-content.active {
-            display: block;
         }
 
         h1 {
             color: #ffffff;
             font-size: 2.2rem;
-            margin-bottom: 12px;
+            margin-bottom: 30px;
             font-weight: 700;
         }
 
-        p {
-            color: #8b949e;
-            font-size: 1rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        p a, .sub-text a {
-            color: #58a6ff;
-            text-decoration: none;
-        }
-
-        p a:hover, .sub-text a:hover {
-            text-decoration: underline;
-        }
-
-        /* Search Box */
         .search-container {
-            position: relative;
-            max-width: 550px;
-            margin: 0 auto 12px auto;
             background: #ffffff;
             border-radius: 8px;
             padding: 4px;
             display: flex;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 25px;
         }
 
         .search-container input {
@@ -124,13 +73,6 @@
             background-color: #388bfd;
         }
 
-        .sub-text {
-            font-size: 0.8rem;
-            color: #6e7681;
-            margin-bottom: 30px;
-        }
-
-        /* Result Cards */
         .result-card {
             border-radius: 12px;
             padding: 30px;
@@ -154,322 +96,35 @@
             font-weight: 700;
         }
 
-        .result-card.success h3 { color: #3fb950; }
-        .result-card.danger h3 { color: #f85149; }
+        .result-card.success h3 {
+            color: #3fb950;
+        }
+
+        .result-card.danger h3 {
+            color: #f85149;
+        }
 
         .result-card p {
             color: #c9d1d9;
             font-size: 0.95rem;
-            margin-bottom: 0;
+            line-height: 1.5;
         }
-
-        .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        /* Timeline History Styles */
-        .timeline-container {
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .timeline-title {
-            text-align: center;
-            color: #ffffff;
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
-
-        .timeline-subtitle {
-            text-align: center;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            color: #8b949e;
-        }
-
-        .breach-item {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .breach-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .breach-logo {
-            width: 36px;
-            height: 36px;
-            background: #21262d;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #58a6ff;
-        }
-
-        .breach-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .breach-date {
-            font-size: 0.75rem;
-            background: #30363d;
-            padding: 2px 8px;
-            border-radius: 12px;
-            color: #8b949e;
-            margin-left: auto;
-        }
-
-        .breach-desc {
-            font-size: 0.85rem;
-            color: #8b949e;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .breach-data-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #c9d1d9;
-            margin-bottom: 6px;
-        }
-
-        .breach-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tag {
-            background: #21262d;
-            color: #c9d1d9;
-            font-size: 0.75rem;
-            padding: 3px 10px;
-            border-radius: 6px;
-            border: 1px solid #30363d;
-        }
-
-        /* Modal Popup Styles for Password */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-card {
-            background: #161b22;
-            border-radius: 12px;
-            padding: 35px 25px;
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-card {
-            transform: scale(1);
-        }
-
-        .modal-card.success {
-            border: 2px solid #238636;
-            background-color: #0d1b11;
-        }
-
-        .modal-card.danger {
-            border: 2px solid #da3633;
-            background-color: #261214;
-        }
-
-        .modal-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .modal-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            font-weight: 700;
-            line-height: 1.4;
-        }
-
-        .modal-card.success h3 { color: #3fb950; }
-        .modal-card.danger h3 { color: #f85149; }
-
-        .modal-card p {
-            color: #c9d1d9;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        .close-btn {
-            background: #30363d;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .modal-card.success .close-btn { background-color: #238636; }
-        .modal-card.danger .close-btn { background-color: #da3633; }
     </style>
 </head>
 <body>
 
-    <!-- Tabs Navigation -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('email')">Email Breach Check</button>
-        <button class="tab-btn" onclick="switchTab('password')">Password Breach Check</button>
-    </div>
-
-    <!-- EMAIL CHECKER TAB -->
-    <div id="emailTab" class="tab-content active">
-        <h1>Check if your email address is in a data breach</h1>
-        <div class="search-container">
-            <input type="email" id="emailInput" placeholder="name@example.com">
-            <button onclick="checkEmail()">Check</button>
-        </div>
-        <div class="sub-text">Using Have I Been Pwned is subject to the <a href="#">terms of use</a></div>
+    <div class="container">
+        <h1>Password Checking 🔐</h1>
         
-        <div id="emailResult"></div>
-    </div>
-
-    <!-- PASSWORD CHECKER TAB -->
-    <div id="passwordTab" class="tab-content">
-        <h1>Pwned Passwords</h1>
-        <p>Check if your password has appeared in known data breaches securely.</p>
         <div class="search-container">
-            <input type="password" id="passwordInput" placeholder="Enter password to check...">
+            <input type="password" id="passwordInput" placeholder="Enter password to check live...">
             <button onclick="checkPasswordLive()">Check</button>
         </div>
-        <div class="sub-text">Pwned Passwords is free and open source for everyone to use.</div>
-    </div>
 
-    <!-- Password Modal Popup -->
-    <div id="modalOverlay" class="modal-overlay">
-        <div id="modalCard" class="modal-card">
-            <div id="modalIcon" class="modal-icon"></div>
-            <h3 id="modalTitle"></h3>
-            <p id="modalDesc"></p>
-            <button class="close-btn" onclick="closeModal()">OK</button>
-        </div>
+        <div id="passwordResult"></div>
     </div>
 
     <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-            if(tabName === 'email') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('emailTab').classList.add('active');
-            } else {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('passwordTab').classList.add('active');
-            }
-        }
-
-        // Email Check Handler (Simulated layout matching original HIBP timeline UI)
-        function checkEmail() {
-            const email = document.getElementById('emailInput').value.trim();
-            const resultDiv = document.getElementById('emailResult');
-
-            if(!email) {
-                resultDiv.innerHTML = `<div class="result-card danger"><h3>Please enter a valid email address.</h3></div>`;
-                return;
-            }
-
-            // Type "hacked@example.com" or test to see breach history, otherwise 0 breaches
-            if (email.toLowerCase().includes('hacked') || email.toLowerCase().includes('sample')) {
-                resultDiv.innerHTML = `
-                    <div class="result-card danger" style="margin-bottom:20px;">
-                        <h3>4 Data Breaches Found</h3>
-                        <p>Oh no — pwned! This email address has been found in multiple data breaches.</p>
-                    </div>
-                    <div class="timeline-container">
-                        <div class="timeline-title">Email Breach History</div>
-                        <div class="timeline-subtitle">Timeline of data breaches affecting your email address</div>
-                        
-                        <div class="breach-item">
-                            <div class="breach-header">
-                                <div class="breach-logo">C</div>
-                                <div class="breach-name">Cutout.Pro</div>
-                                <div class="breach-date">Feb 2024</div>
-                            </div>
-                            <div class="breach-desc">In February 2024, the AI-powered visual design platform Cutout.Pro suffered a data breach that exposed 20M records.</div>
-                            <div class="breach-data-title">Compromised data:</div>
-                            <div class="breach-tags">
-                                <span class="tag">Email addresses</span>
-                                <span class="tag">IP addresses</span>
-                                <span class="tag">Names</span>
-                                <span class="tag">Passwords</span>
-                            </div>
-                        </div>
-
-                        <div class="breach-item">
-                            <div class="breach-header">
-                                <div class="breach-logo">G</div>
-                                <div class="breach-name">GamingMonk</div>
-                                <div class="breach-date">Dec 2023</div>
-                            </div>
-                            <div class="breach-desc">In December 2023, India's largest esports-community GamingMonk suffered a data breach.</div>
-                            <div class="breach-data-title">Compromised data:</div>
-                            <div class="breach-tags">
-                                <span class="tag">Dates of birth</span>
-                                <span class="tag">Email addresses</span>
-                                <span class="tag">Names</span>
-                                <span class="tag">Passwords</span>
-                                <span class="tag">Phone numbers</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                resultDiv.innerHTML = `
-                    <div class="timeline-container">
-                        <div class="timeline-title">Email Breach History</div>
-                        <div class="timeline-subtitle">Timeline of data breaches affecting your email address</div>
-                        <div class="result-card success">
-                            <div class="icon">🛡️</div>
-                            <h3>0 Data Breaches</h3>
-                            <p>Good news — no pwnage found! This email address wasn't found in any of the data breaches loaded into Have I Been Pwned. That's great news!</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // Generate SHA-1 Hash for Password Live Check
         async function sha1(str) {
             const buffer = new TextEncoder().encode(str);
             const hashBuffer = await crypto.subtle.digest('SHA-1', buffer);
@@ -477,23 +132,16 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
         }
 
-        // Password Real-time Check with Popup
         async function checkPasswordLive() {
             const pwd = document.getElementById('passwordInput').value;
-            const modalOverlay = document.getElementById('modalOverlay');
-            const modalCard = document.getElementById('modalCard');
-            const modalIcon = document.getElementById('modalIcon');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDesc = document.getElementById('modalDesc');
+            const resultDiv = document.getElementById('passwordResult');
 
             if (!pwd) {
-                modalCard.className = "modal-card danger";
-                modalIcon.innerHTML = "⚠️";
-                modalTitle.innerText = "Error";
-                modalDesc.innerText = "Please enter a password first!";
-                modalOverlay.classList.add('active');
+                resultDiv.innerHTML = `<div class="result-card danger"><h3>Error</h3><p>Please enter a password first!</p></div>`;
                 return;
             }
+
+            resultDiv.innerHTML = `<p style="color:#8b949e;">Checking live database securely...</p>`;
 
             try {
                 const hash = await sha1(pwd);
@@ -516,30 +164,21 @@
                 }
 
                 if (foundCount > 0) {
-                    modalCard.className = "modal-card danger";
-                    modalIcon.innerHTML = "⚠️";
-                    modalTitle.innerText = "NEW PASSWORD BNAO BHUT WEEK HAI PASSWORD ⚠️";
-                    modalDesc.innerHTML = `Yeh password data breaches me <strong>${foundCount.toLocaleString()}</strong> baar mil chuka hai!`;
+                    resultDiv.innerHTML = `
+                        <div class="result-card danger">
+                            <h3>Password Bhut Week Hai !</h3>
+                            <p>Password Itni Baar <strong>${foundCount.toLocaleString()}</strong> Used Ho Chuka Hai</p>
+                        </div>`;
                 } else {
-                    modalCard.className = "modal-card success";
-                    modalIcon.innerHTML = "🛡️";
-                    modalTitle.innerText = "VERY GOOD STRONG HAI AAPKA PASSWORD !!";
-                    modalDesc.innerText = "Good news — yeh password kisi bhi known data breach database me nahi mila hai!";
+                    resultDiv.innerHTML = `
+                        <div class="result-card success">
+                            <h3>Very Very Good No used Password</h3>
+                            <p>Ye Password Aapke Liye Better Hai ⚡</p>
+                        </div>`;
                 }
-
-                modalOverlay.classList.add('active');
-
             } catch (error) {
-                modalCard.className = "modal-card danger";
-                modalIcon.innerHTML = "❌";
-                modalTitle.innerText = "Connection Error";
-                modalDesc.innerText = "Live database check karne me samasya aayi. Dobara koshish karein.";
-                modalOverlay.classList.add('active');
+                resultDiv.innerHTML = `<div class="result-card danger"><h3>Connection Error</h3><p>Could not check live database. Try again.</p></div>`;
             }
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
         }
     </script>
 
